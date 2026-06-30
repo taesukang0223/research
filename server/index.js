@@ -18,6 +18,7 @@ const searchHandler = require('../api/search');
 const geminiHandler = require('../api/gemini');
 const researchHandler = require('../api/research');
 const reportsHandler = require('../api/reports');
+const analyzeFileHandler = require('../api/analyze-file');
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -29,6 +30,7 @@ app.all('/api/search', adaptHandler(searchHandler));
 app.all('/api/gemini', adaptHandler(geminiHandler));
 app.all('/api/research', adaptHandler(researchHandler));
 app.all('/api/reports', adaptHandler(reportsHandler));
+app.post('/api/analyze-file', adaptHandler(analyzeFileHandler));
 
 app.use('/js', express.static(path.join(rootDir, 'js')));
 app.get('/', (_req, res) => res.sendFile(path.join(rootDir, 'index.html')));
@@ -43,4 +45,5 @@ app.listen(port, () => {
   console.log('  GET/POST /api/gemini');
   console.log('  GET/POST /api/research');
   console.log('  GET      /api/reports');
+  console.log('  GET/POST /api/analyze-file');
 });

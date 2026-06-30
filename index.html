@@ -372,6 +372,201 @@
       font-size: 0.8125rem;
       color: var(--text-muted);
     }
+
+    .file-analyze {
+      margin-bottom: 2rem;
+    }
+
+    .file-analyze-body {
+      padding: 1.25rem;
+    }
+
+    .file-analyze-row {
+      margin-bottom: 1.25rem;
+    }
+
+    .file-analyze-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .file-analyze-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .file-analyze-pick-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .file-analyze-pick-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .file-analyze-pick-btn:hover:not(:disabled) {
+      background: #e4ebf2;
+    }
+
+    .file-analyze-pick-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .file-analyze-filename {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .file-analyze-filename.has-file {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .file-analyze-hint {
+      margin-top: 0.375rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .file-analyze-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .file-analyze-option {
+      position: relative;
+    }
+
+    .file-analyze-option input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .file-analyze-option span {
+      display: inline-block;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .file-analyze-option input:checked + span {
+      color: var(--accent);
+      font-weight: 600;
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .file-analyze-option input:focus-visible + span {
+      outline: 2px solid var(--accent-light);
+      outline-offset: 2px;
+    }
+
+    .file-analyze-submit {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .file-analyze-submit:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
+
+    .file-analyze-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .file-analyze-status {
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      min-height: 1.25rem;
+    }
+
+    .file-analyze-status.error {
+      color: #b54747;
+    }
+
+    .file-analyze-status.success {
+      color: #3d6b4f;
+    }
+
+    .file-analyze-result {
+      margin-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+    }
+
+    .file-analyze-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.8125rem;
+    }
+
+    .file-analyze-meta-tag {
+      padding: 0.2rem 0.625rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      border-radius: 999px;
+    }
+
+    .file-analyze-meta-file {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .file-analyze-meta-size {
+      color: var(--text-muted);
+    }
+
+    .file-analyze-text {
+      padding: 1rem 1.125rem;
+      font-size: 0.9375rem;
+      line-height: 1.75;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .file-analyze-error {
+      margin-top: 1rem;
+      padding: 1rem;
+      font-size: 0.9375rem;
+      color: #b54747;
+      background: #fdf5f5;
+      border: 1px solid #f0d4d4;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
@@ -433,6 +628,56 @@
       </article>
     </section>
 
+    <section id="file-analyze" class="file-analyze" aria-labelledby="file-analyze-heading">
+      <div class="section-header">
+        <h2 id="file-analyze-heading">파일 분석</h2>
+      </div>
+      <div class="file-analyze-body">
+        <form id="file-analyze-form">
+          <div class="file-analyze-row">
+            <span class="file-analyze-label">파일 선택</span>
+            <div class="file-analyze-pick-row">
+              <input id="file-analyze-input" type="file" hidden />
+              <button type="button" id="file-analyze-pick" class="file-analyze-pick-btn">파일 선택</button>
+              <span id="file-analyze-filename" class="file-analyze-filename">선택된 파일 없음</span>
+            </div>
+            <p class="file-analyze-hint">PDF, 이미지(JPG/PNG/WebP/GIF), 음성(MP3/WAV/AAC/OGG 등) · 최대 4MB</p>
+          </div>
+
+          <div class="file-analyze-row">
+            <span class="file-analyze-label">분석 옵션</span>
+            <div class="file-analyze-options" role="radiogroup" aria-label="분석 옵션">
+              <label class="file-analyze-option">
+                <input type="radio" name="analyze-mode" value="summary" checked />
+                <span>핵심 요약</span>
+              </label>
+              <label class="file-analyze-option">
+                <input type="radio" name="analyze-mode" value="checklist" />
+                <span>체크리스트 추출</span>
+              </label>
+              <label class="file-analyze-option">
+                <input type="radio" name="analyze-mode" value="transcript" />
+                <span>전체 받아쓰기</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="file-analyze-row">
+            <button type="submit" id="file-analyze-submit" class="file-analyze-submit">분석 요청</button>
+            <p id="file-analyze-status" class="file-analyze-status" aria-live="polite"></p>
+          </div>
+
+          <div id="file-analyze-result" class="file-analyze-result" hidden>
+            <div id="file-analyze-content">
+              <div id="file-analyze-meta" class="file-analyze-meta"></div>
+              <div id="file-analyze-text" class="file-analyze-text"></div>
+            </div>
+            <div id="file-analyze-error" class="file-analyze-error" hidden></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
     <section aria-labelledby="report-list-heading">
       <div class="section-header">
         <h2 id="report-list-heading">보고서 목록</h2>
@@ -453,5 +698,6 @@
   </div>
   <script src="js/reports-list.js"></script>
   <script src="js/research.js"></script>
+  <script src="js/file-analyze.js"></script>
 </body>
 </html>

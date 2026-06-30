@@ -8,7 +8,8 @@
     "api/search.js": { "maxDuration": 15 },
     "api/gemini.js": { "maxDuration": 60 },
     "api/research.js": { "maxDuration": 90 },
-    "api/reports.js": { "maxDuration": 15 }
+    "api/reports.js": { "maxDuration": 15 },
+    "api/analyze-file.js": { "maxDuration": 120 }
   },
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
