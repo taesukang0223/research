@@ -57,8 +57,14 @@ function handleKakaoQueryParams() {
   if (kakao === 'connected') {
     setKakaoMessage('카카오 로그인 완료! 이제 보고서가 카카오톡으로 전송됩니다.', 'connected');
     showLoginButton(false);
-  } else if (kakao === 'error') {
-    setKakaoMessage('카카오 로그인에 실패했습니다. 다시 시도해 주세요.', 'error');
+  } else   if (kakao === 'error') {
+    const reason = params.get('reason') || '';
+    const messages = {
+      invalid_state: '카카오 로그인 세션이 만료되었습니다. 다시 시도해 주세요.',
+      token_failed: '카카오 토큰 발급에 실패했습니다. REST API 키와 Client Secret을 확인해 주세요.',
+      not_configured: '카카오 API 환경변수가 설정되지 않았습니다.',
+    };
+    setKakaoMessage(messages[reason] || '카카오 로그인에 실패했습니다. 다시 시도해 주세요.', 'error');
     showLoginButton(true);
   }
 
