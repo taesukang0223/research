@@ -21,37 +21,8 @@ const ANALYSIS_MODES = {
 };
 
 const MAX_FILE_BYTES = 4 * 1024 * 1024;
-const ACCEPT_TYPES = [
-  '.pdf',
-  '.jpg',
-  '.jpeg',
-  '.png',
-  '.webp',
-  '.gif',
-  '.heic',
-  '.mp3',
-  '.wav',
-  '.aac',
-  '.ogg',
-  '.flac',
-  '.m4a',
-  '.webm',
-  'application/pdf',
-  'image/*',
-  'audio/*',
-].join(',');
-
-const form = document.getElementById('file-analyze-form');
-const fileInput = document.getElementById('file-analyze-input');
-const filePickBtn = document.getElementById('file-analyze-pick');
-const fileNameEl = document.getElementById('file-analyze-filename');
-const submitBtn = document.getElementById('file-analyze-submit');
-const statusEl = document.getElementById('file-analyze-status');
-const resultSection = document.getElementById('file-analyze-result');
-const resultContent = document.getElementById('file-analyze-content');
-const resultError = document.getElementById('file-analyze-error');
-const resultMeta = document.getElementById('file-analyze-meta');
-const resultText = document.getElementById('file-analyze-text');
+const ACCEPT_TYPES =
+  '.pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.mp3,.wav,.aac,.ogg,.flac,.m4a,.webm,application/pdf,image/*,audio/*';
 
 function escapeHtml(text) {
   return String(text ?? '')
@@ -67,117 +38,162 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function setStatus(message, type = '') {
-  statusEl.textContent = message;
-  statusEl.className = 'file-analyze-status' + (type ? ` ${type}` : '');
-}
+function initFileAnalyze() {
+  const form = document.getElementById('file-analyze-form');
+  const fileInput = document.getElementById('file-analyze-input');
+  const pickLabel = document.getElementById('file-analyze-pick');
+  const pickText = document.getElementById('file-analyze-pick-text');
+  const fileInfoEl = document.getElementById('file-analyze-fileinfo');
+  const fileNameEl = document.getElementById('file-analyze-filename');
+  const clearBtn = document.getElementById('file-analyze-clear');
+  const submitBtn = document.getElementById('file-analyze-submit');
+  const statusEl = document.getElementById('file-analyze-status');
+  const resultSection = document.getElementById('file-analyze-result');
+  const resultContent = document.getElementById('file-analyze-content');
+  const resultError = document.getElementById('file-analyze-error');
+  const resultMeta = document.getElementById('file-analyze-meta');
+  const resultText = document.getElementById('file-analyze-text');
 
-function hideResult() {
-  resultSection.hidden = true;
-  resultContent.hidden = false;
-  resultError.hidden = true;
-  resultError.textContent = '';
-}
+  if (!form || !fileInput || !pickLabel || !submitBtn || !pickText) return;
 
-function showResultError(message) {
-  resultSection.hidden = false;
-  resultContent.hidden = true;
-  resultError.hidden = false;
-  resultError.textContent = message;
-}
+  let selectedFile = null;
+  let isAnalyzing = false;
 
-function showResult(data, modeKey, file) {
-  const mode = ANALYSIS_MODES[modeKey];
-  resultSection.hidden = false;
-  resultContent.hidden = false;
-  resultError.hidden = true;
+  fileInput.accept = ACCEPT_TYPES;
 
-  resultMeta.innerHTML = `
-    <span class="file-analyze-meta-tag">${escapeHtml(mode?.label || modeKey)}</span>
-    <span class="file-analyze-meta-file">${escapeHtml(file.name)}</span>
-    <span class="file-analyze-meta-size">${escapeHtml(formatBytes(file.size))}</span>
-  `;
-  resultText.textContent = data.analysis || '(분석 결과 없음)';
-}
-
-function updateFileLabel() {
-  const file = fileInput.files?.[0];
-  if (file) {
-    fileNameEl.textContent = `${file.name} (${formatBytes(file.size)})`;
-    fileNameEl.classList.add('has-file');
-  } else {
-    fileNameEl.textContent = '선택된 파일 없음';
-    fileNameEl.classList.remove('has-file');
-  }
-}
-
-function setPickDisabled(disabled) {
-  fileInput.disabled = disabled;
-  filePickBtn.classList.toggle('is-disabled', disabled);
-  if (disabled) {
-    filePickBtn.setAttribute('aria-disabled', 'true');
-  } else {
-    filePickBtn.removeAttribute('aria-disabled');
-  }
-}
-
-fileInput.addEventListener('change', updateFileLabel);
-
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const file = fileInput.files?.[0];
-  if (!file) {
-    setStatus('분석할 파일을 선택해 주세요.', 'error');
-    return;
+  function setStatus(message, type = '') {
+    statusEl.textContent = message;
+    statusEl.className = 'file-analyze-status' + (type ? ` ${type}` : '');
   }
 
-  if (file.size > MAX_FILE_BYTES) {
-    setStatus(`파일 크기는 ${MAX_FILE_BYTES / (1024 * 1024)}MB 이하여야 합니다.`, 'error');
-    return;
+  function hideResult() {
+    resultSection.hidden = true;
+    resultContent.hidden = false;
+    resultError.hidden = true;
+    resultError.textContent = '';
   }
 
-  const modeKey = form.querySelector('input[name="analyze-mode"]:checked')?.value || 'summary';
-  const mode = ANALYSIS_MODES[modeKey];
-  if (!mode) {
-    setStatus('분석 옵션을 선택해 주세요.', 'error');
-    return;
+  function showResultError(message) {
+    resultSection.hidden = false;
+    resultContent.hidden = true;
+    resultError.hidden = false;
+    resultError.textContent = message;
   }
 
-  hideResult();
-  submitBtn.disabled = true;
-  setPickDisabled(true);
-  setStatus('AI가 파일을 분석하고 있습니다...');
+  function showResult(data, modeKey, file) {
+    const mode = ANALYSIS_MODES[modeKey];
+    resultSection.hidden = false;
+    resultContent.hidden = false;
+    resultError.hidden = true;
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('prompt', mode.prompt);
+    resultMeta.innerHTML = `
+      <span class="file-analyze-meta-tag">${escapeHtml(mode?.label || modeKey)}</span>
+      <span class="file-analyze-meta-file">${escapeHtml(file.name)}</span>
+      <span class="file-analyze-meta-size">${escapeHtml(formatBytes(file.size))}</span>
+    `;
+    resultText.textContent = data.analysis || '(분석 결과 없음)';
+  }
 
-  try {
-    const response = await fetch('/api/analyze-file', {
-      method: 'POST',
-      body: formData,
-    });
+  function updateSelectionUI() {
+    const hasFile = Boolean(selectedFile);
 
-    const data = await response.json();
+    fileInfoEl.hidden = !hasFile;
+    pickText.textContent = hasFile ? '다른 파일 선택' : '파일 선택';
 
-    if (!response.ok) {
-      setStatus(data.error || '파일 분석에 실패했습니다.', 'error');
-      showResultError(data.error || '파일 분석에 실패했습니다.');
+    if (hasFile) {
+      fileNameEl.textContent = `${selectedFile.name} (${formatBytes(selectedFile.size)})`;
+    }
+
+    submitBtn.disabled = !hasFile || isAnalyzing;
+    fileInput.disabled = isAnalyzing;
+    pickLabel.classList.toggle('is-disabled', isAnalyzing);
+    if (clearBtn) clearBtn.disabled = isAnalyzing || !hasFile;
+  }
+
+  function clearSelection() {
+    selectedFile = null;
+    fileInput.value = '';
+    updateSelectionUI();
+    setStatus('');
+  }
+
+  function handleFileSelected() {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+
+    if (file.size > MAX_FILE_BYTES) {
+      setStatus(`파일 크기는 ${MAX_FILE_BYTES / (1024 * 1024)}MB 이하여야 합니다.`, 'error');
+      fileInput.value = '';
+      selectedFile = null;
+      updateSelectionUI();
       return;
     }
 
-    setStatus('분석이 완료되었습니다.', 'success');
-    showResult(data, modeKey, file);
-    resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  } catch {
-    setStatus('서버 연결에 실패했습니다.', 'error');
-    showResultError('서버 연결에 실패했습니다.');
-  } finally {
-    submitBtn.disabled = false;
-    setPickDisabled(false);
+    selectedFile = file;
+    setStatus(`"${file.name}" 파일이 선택되었습니다.`, 'success');
+    updateSelectionUI();
   }
-});
 
-fileInput.accept = ACCEPT_TYPES;
-updateFileLabel();
+  fileInput.addEventListener('change', handleFileSelected);
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      clearSelection();
+    });
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!selectedFile) {
+      setStatus('분석할 파일을 선택해 주세요.', 'error');
+      return;
+    }
+
+    const modeKey = form.querySelector('input[name="analyze-mode"]:checked')?.value || 'summary';
+    const mode = ANALYSIS_MODES[modeKey];
+    if (!mode) {
+      setStatus('분석 옵션을 선택해 주세요.', 'error');
+      return;
+    }
+
+    hideResult();
+    isAnalyzing = true;
+    updateSelectionUI();
+    setStatus('AI가 파일을 분석하고 있습니다...');
+
+    const formData = new FormData();
+    formData.append('file', selectedFile, selectedFile.name);
+    formData.append('prompt', mode.prompt);
+
+    try {
+      const response = await fetch('/api/analyze-file', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setStatus(data.error || '파일 분석에 실패했습니다.', 'error');
+        showResultError(data.error || '파일 분석에 실패했습니다.');
+        return;
+      }
+
+      setStatus('분석이 완료되었습니다.', 'success');
+      showResult(data, modeKey, selectedFile);
+      resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch {
+      setStatus('서버 연결에 실패했습니다.', 'error');
+      showResultError('서버 연결에 실패했습니다.');
+    } finally {
+      isAnalyzing = false;
+      updateSelectionUI();
+    }
+  });
+
+  updateSelectionUI();
+}
+
+document.addEventListener('DOMContentLoaded', initFileAnalyze);

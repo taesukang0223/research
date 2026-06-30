@@ -405,19 +405,11 @@
       position: relative;
     }
 
-    .file-analyze-input-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
     .file-analyze-pick-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0.5rem 1rem;
       font-size: 0.875rem;
       font-weight: 600;
@@ -426,6 +418,24 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       cursor: pointer;
+      overflow: hidden;
+    }
+
+    .file-analyze-input-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-analyze-input-overlay:disabled {
+      cursor: not-allowed;
+    }
+
+    .file-analyze-pick-text {
+      pointer-events: none;
     }
 
     .file-analyze-pick-btn:hover:not(:disabled) {
@@ -441,12 +451,38 @@
 
     .file-analyze-filename {
       font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    .file-analyze-filename.has-file {
       color: var(--text-primary);
       font-weight: 500;
+    }
+
+    .file-analyze-fileinfo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: #f0f7ff;
+      border: 1px solid #d4e4f7;
+      border-radius: 6px;
+    }
+
+    .file-analyze-clear-btn {
+      padding: 0.25rem 0.625rem;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .file-analyze-clear-btn:hover:not(:disabled) {
+      background: var(--accent-light);
+    }
+
+    .file-analyze-clear-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .file-analyze-hint {
@@ -652,15 +688,19 @@
           <div class="file-analyze-row">
             <span class="file-analyze-label">파일 선택</span>
             <div class="file-analyze-pick-row">
-              <input
-                id="file-analyze-input"
-                type="file"
-                class="file-analyze-input-hidden"
-                tabindex="-1"
-                accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.mp3,.wav,.aac,.ogg,.flac,.m4a,.webm,application/pdf,image/*,audio/*"
-              />
-              <label for="file-analyze-input" id="file-analyze-pick" class="file-analyze-pick-btn">파일 선택</label>
-              <span id="file-analyze-filename" class="file-analyze-filename">선택된 파일 없음</span>
+              <label class="file-analyze-pick-btn" id="file-analyze-pick">
+                <input
+                  id="file-analyze-input"
+                  type="file"
+                  class="file-analyze-input-overlay"
+                  accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.mp3,.wav,.aac,.ogg,.flac,.m4a,.webm,application/pdf,image/*,audio/*"
+                />
+                <span class="file-analyze-pick-text" id="file-analyze-pick-text">파일 선택</span>
+              </label>
+              <div id="file-analyze-fileinfo" class="file-analyze-fileinfo" hidden>
+                <span id="file-analyze-filename" class="file-analyze-filename"></span>
+                <button type="button" id="file-analyze-clear" class="file-analyze-clear-btn">선택 취소</button>
+              </div>
             </div>
             <p class="file-analyze-hint">PDF, 이미지(JPG/PNG/WebP/GIF), 음성(MP3/WAV/AAC/OGG 등) · 최대 4MB</p>
           </div>
@@ -684,7 +724,7 @@
           </div>
 
           <div class="file-analyze-row">
-            <button type="submit" id="file-analyze-submit" class="file-analyze-submit">분석 요청</button>
+            <button type="submit" id="file-analyze-submit" class="file-analyze-submit" disabled>분석 요청</button>
             <p id="file-analyze-status" class="file-analyze-status" aria-live="polite"></p>
           </div>
 
