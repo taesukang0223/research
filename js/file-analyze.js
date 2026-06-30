@@ -20,7 +20,7 @@ const ANALYSIS_MODES = {
   },
 };
 
-const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_FILE_BYTES = 4 * 1024 * 1024;
 const ACCEPT_TYPES =
   '.pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.mp3,.wav,.aac,.ogg,.flac,.m4a,.webm,application/pdf,image/*,audio/*';
 
@@ -173,7 +173,22 @@ function initFileAnalyze() {
         body: formData,
       });
 
-      const data = await response.json();
+      const rawText = await response.text();
+      let data;
+      try {
+        data = rawText ? JSON.parse(rawText) : {};
+      } catch {
+        if (response.status === 413) {
+          data = { error: '파일이 너무 큽니다. 4MB 이하 파일을 선택해 주세요.' };
+        } else {
+          data = {
+            error:
+              response.status >= 500
+                ? '서버 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+                : `요청에 실패했습니다. (HTTP ${response.status})`,
+          };
+        }
+      }
 
       if (!response.ok) {
         setStatus(data.error || '파일 분석에 실패했습니다.', 'error');
@@ -184,9 +199,13 @@ function initFileAnalyze() {
       setStatus('분석이 완료되었습니다.', 'success');
       showResult(data, modeKey, selectedFile);
       resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } catch {
-      setStatus('서버 연결에 실패했습니다.', 'error');
-      showResultError('서버 연결에 실패했습니다.');
+    } catch (err) {
+      const message =
+        err?.name === 'TypeError'
+          ? '서버에 연결하지 못했습니다. 파일 크기(4MB 이하)와 네트워크를 확인해 주세요.'
+          : '서버 연결에 실패했습니다.';
+      setStatus(message, 'error');
+      showResultError(message);
     } finally {
       isAnalyzing = false;
       updateSelectionUI();
