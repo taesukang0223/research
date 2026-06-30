@@ -201,6 +201,67 @@
       color: #b54747;
     }
 
+    .research-report {
+      margin-bottom: 2rem;
+    }
+
+    .report-card {
+      padding: 1.5rem;
+    }
+
+    .report-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .report-block {
+      margin-bottom: 1.25rem;
+    }
+
+    .report-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .report-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .report-summary-text {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .report-body-text,
+    .report-sources-text {
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .report-sources-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .report-error {
+      padding: 1.5rem;
+      color: #b54747;
+      font-size: 0.9375rem;
+    }
+
     section {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -287,6 +348,30 @@
           <div id="naver-results" class="result-panel-body"></div>
         </div>
       </div>
+    </section>
+
+    <section id="research-report" class="research-report" hidden aria-labelledby="research-report-heading">
+      <div class="section-header">
+        <h2 id="research-report-heading">AI 보고서</h2>
+      </div>
+      <article class="report-card">
+        <div id="report-content">
+          <h3 id="report-title" class="report-title"></h3>
+          <div class="report-block">
+            <div class="report-label">요약</div>
+            <div id="report-summary" class="report-summary-text"></div>
+          </div>
+          <div class="report-block">
+            <div class="report-label">본문</div>
+            <div id="report-body" class="report-body-text"></div>
+          </div>
+          <div class="report-block">
+            <div class="report-label">출처</div>
+            <div id="report-sources" class="report-sources-text"></div>
+          </div>
+        </div>
+        <div id="report-error" class="report-error" hidden></div>
+      </article>
     </section>
 
     <section aria-labelledby="report-list-heading">

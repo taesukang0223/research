@@ -1,5 +1,5 @@
 /**
- * 리서치 실행 — /api/research 호출 및 결과 표시
+ * 리서치 실행 — /api/research 호출 및 결과·보고서 표시
  */
 
 const form = document.getElementById('research-form');
@@ -9,6 +9,13 @@ const statusEl = document.getElementById('research-status');
 const resultsSection = document.getElementById('research-results');
 const tavilyEl = document.getElementById('tavily-results');
 const naverEl = document.getElementById('naver-results');
+const reportSection = document.getElementById('research-report');
+const reportContent = document.getElementById('report-content');
+const reportError = document.getElementById('report-error');
+const reportTitle = document.getElementById('report-title');
+const reportSummary = document.getElementById('report-summary');
+const reportBody = document.getElementById('report-body');
+const reportSources = document.getElementById('report-sources');
 
 function setStatus(message, type = '') {
   statusEl.textContent = message;
@@ -65,10 +72,37 @@ function renderNaver(data) {
     .join('');
 }
 
+function hideReport() {
+  reportSection.hidden = true;
+  reportContent.hidden = false;
+  reportError.hidden = true;
+  reportError.textContent = '';
+}
+
+function showReportError(message) {
+  reportSection.hidden = false;
+  reportContent.hidden = true;
+  reportError.hidden = false;
+  reportError.textContent = message;
+}
+
+function showReport(report) {
+  reportSection.hidden = false;
+  reportContent.hidden = false;
+  reportError.hidden = true;
+  reportError.textContent = '';
+
+  reportTitle.textContent = report.title || '제목 없음';
+  reportSummary.textContent = report.summary || '(요약 없음)';
+  reportBody.textContent = report.body || '(본문 없음)';
+  reportSources.textContent = report.sources || '(출처 없음)';
+}
+
 async function runResearch(keyword) {
-  setStatus('검색 중…');
+  setStatus('검색 및 보고서 작성 중…');
   submitBtn.disabled = true;
   resultsSection.hidden = true;
+  hideReport();
 
   try {
     const response = await fetch('/api/research', {
@@ -79,18 +113,27 @@ async function runResearch(keyword) {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      setStatus(data.error || '검색에 실패했습니다.', 'error');
-      tavilyEl.innerHTML = renderTavily(data.tavily || { error: '—' });
-      naverEl.innerHTML = renderNaver(data.naver || { error: '—' });
-      resultsSection.hidden = false;
-      return;
-    }
-
     tavilyEl.innerHTML = renderTavily(data.tavily || {});
     naverEl.innerHTML = renderNaver(data.naver || {});
     resultsSection.hidden = false;
-    setStatus(`"${keyword}" 검색 완료`, 'success');
+
+    if (data.report?.error && !data.report?.title) {
+      showReportError(data.report.error);
+      setStatus(data.report.error, 'error');
+      return;
+    }
+
+    if (!response.ok) {
+      setStatus(data.error || '리서치에 실패했습니다.', 'error');
+      if (data.report?.error) showReportError(data.report.error);
+      return;
+    }
+
+    if (data.report) {
+      showReport(data.report);
+    }
+
+    setStatus(`"${keyword}" 리서치 완료`, 'success');
   } catch {
     setStatus('서버 연결에 실패했습니다.', 'error');
   } finally {
