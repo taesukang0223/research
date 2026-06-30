@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>보고서 상세 — 방산 리서치 아카이브</title>
+  <title>상세 — 그림일기 &amp; 리서치 보고서 아카이브</title>
   <style>
     *,
     *::before,
@@ -111,6 +111,16 @@
       color: #b54747;
       font-size: 0.9375rem;
     }
+
+    .detail-image {
+      display: block;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--accent-light);
+    }
   </style>
 </head>
 <body>
@@ -128,6 +138,8 @@
           <span id="detail-topic" class="detail-topic"></span>
           <span id="detail-date"></span>
         </p>
+
+        <img id="detail-image" class="detail-image" alt="그림일기 그림" hidden />
 
         <div class="report-block">
           <div class="report-label">요약</div>

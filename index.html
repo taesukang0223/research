@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>방산 리서치 아카이브</title>
+  <title>그림일기 &amp; 리서치 보고서 아카이브</title>
   <style>
     *,
     *::before,
@@ -673,13 +673,186 @@
       border: 1px solid #f0d4d4;
       border-radius: 6px;
     }
+
+    .tab-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      appearance: none;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.75rem 1rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      margin-bottom: -1px;
+    }
+
+    .tab-btn:hover { color: var(--text-secondary); }
+
+    .tab-btn.is-active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-panel[hidden] { display: none; }
+
+    .travel-form {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .travel-form input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 0.9375rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .travel-form input:focus { border-color: var(--accent); }
+
+    .travel-form button {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .travel-form button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .travel-intro {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .travel-status {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      min-height: 1.25rem;
+    }
+
+    .travel-status.error { color: #b54747; }
+    .travel-status.success { color: #2f7d4f; }
+
+    .kakao-send-opt {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+
+    .kakao-send-opt input { width: 1rem; height: 1rem; cursor: pointer; }
+
+    .travel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .travel-card-image {
+      display: block;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--accent-light);
+    }
+
+    .travel-card-body { padding: 1.25rem 1.5rem; }
+
+    .travel-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .travel-card-diary {
+      font-size: 0.9375rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      margin-bottom: 1rem;
+    }
+
+    .travel-card-highlights {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    .travel-card-link {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .travel-card-link:hover { text-decoration: underline; }
+
+    .travel-spinner {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .travel-spinner::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: travel-spin 0.8s linear infinite;
+    }
+
+    @keyframes travel-spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>방산 리서치 아카이브</h1>
-      <p>방위산업 관련 리서치 보고서를 모아둔 아카이브입니다.</p>
+      <h1>그림일기 &amp; 리서치 보고서 아카이브</h1>
+      <p>여행 그림일기와 리서치 보고서를 모아둔 아카이브입니다.</p>
+
+      <div id="kakao-auth" class="kakao-auth" hidden>
+        <p id="kakao-auth-status" class="kakao-auth-status">카카오 연결 상태 확인 중…</p>
+        <div class="kakao-auth-actions">
+          <a id="kakao-login-btn" href="/api/kakao/auth" class="kakao-login-btn" hidden>카카오 로그인</a>
+          <button type="button" id="kakao-logout-btn" class="kakao-logout-btn" hidden>연결 해제</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tab-nav" role="tablist">
+      <button type="button" class="tab-btn is-active" id="tab-travel" role="tab" aria-selected="true" aria-controls="panel-travel">여행 그림일기</button>
+      <button type="button" class="tab-btn" id="tab-research" role="tab" aria-selected="false" aria-controls="panel-research">리서치 보고서</button>
+    </nav>
+
+    <div id="panel-research" class="tab-panel" role="tabpanel" aria-labelledby="tab-research" hidden>
       <form id="research-form" class="research-form">
         <input
           id="topic-keyword"
@@ -691,16 +864,11 @@
         />
         <button type="submit" id="research-submit">리서치 실행</button>
       </form>
+      <label class="kakao-send-opt">
+        <input type="checkbox" id="research-send-kakao" />
+        <span>완성되면 카카오톡으로 전송</span>
+      </label>
       <p id="research-status" class="research-status" aria-live="polite"></p>
-
-      <div id="kakao-auth" class="kakao-auth" hidden>
-        <p id="kakao-auth-status" class="kakao-auth-status">카카오 연결 상태 확인 중…</p>
-        <div class="kakao-auth-actions">
-          <a id="kakao-login-btn" href="/api/kakao/auth" class="kakao-login-btn" hidden>카카오 로그인</a>
-          <button type="button" id="kakao-logout-btn" class="kakao-logout-btn" hidden>연결 해제</button>
-        </div>
-      </div>
-    </header>
 
     <section id="research-results" class="research-results" hidden aria-labelledby="research-results-heading">
       <div class="section-header">
@@ -801,6 +969,37 @@
         </form>
       </div>
     </section>
+    </div>
+
+    <div id="panel-travel" class="tab-panel" role="tabpanel" aria-labelledby="tab-travel">
+      <p class="travel-intro">여행지를 입력하면 그 곳의 특징과 명소를 찾아 초등학생 그림일기용 그림을 그려 드려요. 완성된 그림일기는 자동으로 게시됩니다.</p>
+      <form id="travel-form" class="travel-form">
+        <input
+          id="travel-destination"
+          type="text"
+          name="destination"
+          placeholder="여행지를 입력하세요 (예: 경주, 제주도, 파리)"
+          autocomplete="off"
+          maxlength="60"
+        />
+        <button type="submit" id="travel-submit">그림일기 만들기</button>
+      </form>
+      <label class="kakao-send-opt">
+        <input type="checkbox" id="travel-send-kakao" />
+        <span>완성되면 카카오톡으로 전송</span>
+      </label>
+      <p id="travel-status" class="travel-status" aria-live="polite"></p>
+
+      <section id="travel-result" class="travel-card" hidden>
+        <img id="travel-image" class="travel-card-image" alt="여행 그림일기 그림" />
+        <div class="travel-card-body">
+          <h3 id="travel-title" class="travel-card-title"></h3>
+          <div id="travel-diary" class="travel-card-diary"></div>
+          <div id="travel-highlights" class="travel-card-highlights" hidden></div>
+          <a id="travel-link" class="travel-card-link" href="#" hidden>그림일기 상세 보기 →</a>
+        </div>
+      </section>
+    </div>
 
     <section aria-labelledby="report-list-heading">
       <div class="section-header">
@@ -817,12 +1016,14 @@
     </section>
 
     <footer>
-      &copy; 2026 방산 리서치 아카이브
+      &copy; 2026 그림일기 &amp; 리서치 보고서 아카이브
     </footer>
   </div>
+  <script src="js/tabs.js"></script>
   <script src="js/reports-list.js"></script>
   <script src="js/kakao-auth.js"></script>
   <script src="js/research.js"></script>
   <script src="js/file-analyze.js"></script>
+  <script src="js/travel.js"></script>
 </body>
 </html>

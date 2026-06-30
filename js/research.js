@@ -99,6 +99,9 @@ function showReport(report) {
 }
 
 async function runResearch(keyword) {
+  const sendKakaoEl = document.getElementById('research-send-kakao');
+  const sendKakao = Boolean(sendKakaoEl && sendKakaoEl.checked);
+
   setStatus('검색 및 보고서 작성 중…');
   submitBtn.disabled = true;
   resultsSection.hidden = true;
@@ -109,7 +112,7 @@ async function runResearch(keyword) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify({ query: keyword }),
+      body: JSON.stringify({ query: keyword, sendKakao }),
     });
 
     const data = await response.json();

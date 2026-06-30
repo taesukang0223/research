@@ -8,6 +8,7 @@
     "api/search.js": { "maxDuration": 15 },
     "api/gemini.js": { "maxDuration": 60 },
     "api/research.js": { "maxDuration": 90 },
+    "api/travel.js": { "maxDuration": 120 },
     "api/reports.js": { "maxDuration": 15 },
     "api/analyze-file.js": { "maxDuration": 180 },
     "api/kakao/auth.js": { "maxDuration": 15 },

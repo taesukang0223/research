@@ -40,13 +40,24 @@ function showReport(report) {
   document.getElementById('report-error').hidden = true;
   document.getElementById('report-detail').hidden = false;
 
-  document.title = `${report.title} — 방산 리서치 아카이브`;
+  document.title = `${report.title} — 그림일기 & 리서치 보고서 아카이브`;
   document.getElementById('detail-title').textContent = report.title || '제목 없음';
   document.getElementById('detail-topic').textContent = report.topic || '';
   document.getElementById('detail-date').textContent = formatDate(report.created_at);
   document.getElementById('detail-summary').textContent = report.summary || '(요약 없음)';
   document.getElementById('detail-content').textContent = report.content || '(본문 없음)';
   document.getElementById('detail-sources').textContent = report.sources || '(출처 없음)';
+
+  const imageEl = document.getElementById('detail-image');
+  if (imageEl) {
+    if (report.image_url) {
+      imageEl.src = report.image_url;
+      imageEl.alt = `${report.title || '그림일기'} 그림`;
+      imageEl.hidden = false;
+    } else {
+      imageEl.hidden = true;
+    }
+  }
 }
 
 async function loadReportDetail() {
