@@ -18,7 +18,9 @@ const searchHandler = require('../api/search');
 const geminiHandler = require('../api/gemini');
 const researchHandler = require('../api/research');
 const travelHandler = require('../api/travel');
+const travelSearchHandler = require('../api/travel-search');
 const reportsHandler = require('../api/reports');
+const reportViewHandler = require('../api/report-view');
 const analyzeFileHandler = require('../api/analyze-file');
 const kakaoAuthHandler = require('../api/kakao/auth');
 const kakaoCallbackHandler = require('../api/kakao/callback');
@@ -35,6 +37,7 @@ app.all('/api/search', adaptHandler(searchHandler));
 app.all('/api/gemini', adaptHandler(geminiHandler));
 app.all('/api/research', adaptHandler(researchHandler));
 app.all('/api/travel', adaptHandler(travelHandler));
+app.all('/api/travel-search', adaptHandler(travelSearchHandler));
 app.all('/api/reports', adaptHandler(reportsHandler));
 app.post('/api/analyze-file', adaptHandler(analyzeFileHandler));
 app.get('/api/kakao/auth', adaptHandler(kakaoAuthHandler));
@@ -45,6 +48,7 @@ app.post('/api/kakao/logout', adaptHandler(kakaoLogoutHandler));
 app.use('/js', express.static(path.join(rootDir, 'js')));
 app.get('/', (_req, res) => res.sendFile(path.join(rootDir, 'index.html')));
 app.get('/index.html', (_req, res) => res.sendFile(path.join(rootDir, 'index.html')));
+app.get('/report', adaptHandler(reportViewHandler));
 app.get('/report.html', (_req, res) => res.sendFile(path.join(rootDir, 'report.html')));
 
 app.listen(port, () => {
@@ -55,6 +59,7 @@ app.listen(port, () => {
   console.log('  GET/POST /api/gemini');
   console.log('  GET/POST /api/research');
   console.log('  GET/POST /api/travel');
+  console.log('  POST     /api/travel-search');
   console.log('  GET      /api/reports');
   console.log('  GET/POST /api/analyze-file');
   console.log('  GET      /api/kakao/auth');

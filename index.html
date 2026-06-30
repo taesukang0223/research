@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>그림일기 &amp; 리서치 보고서 아카이브</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="그림일기 &amp; 리서치 보고서 아카이브">
+  <meta property="og:title" content="그림일기 &amp; 리서치 보고서 아카이브">
+  <meta property="og:description" content="여행 그림일기와 리서치 보고서를 모아둔 아카이브">
+  <meta name="twitter:card" content="summary">
   <style>
     *,
     *::before,
@@ -762,6 +767,90 @@
 
     .kakao-send-opt input { width: 1rem; height: 1rem; cursor: pointer; }
 
+    .travel-options {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .travel-opt-block { margin-bottom: 1.5rem; }
+
+    .travel-opt-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .travel-opt-hint {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .travel-cat { margin-bottom: 1rem; }
+    .travel-cat:last-child { margin-bottom: 0; }
+
+    .travel-cat-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .travel-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .travel-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8125rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.12s;
+    }
+
+    .travel-chip:hover { border-color: var(--accent); }
+
+    .travel-chip input { display: none; }
+
+    .travel-chip.is-checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .travel-draw-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+    }
+
+    .travel-draw-btn {
+      padding: 0.75rem 1.75rem;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .travel-draw-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
     .travel-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -972,7 +1061,8 @@
     </div>
 
     <div id="panel-travel" class="tab-panel" role="tabpanel" aria-labelledby="tab-travel">
-      <p class="travel-intro">여행지를 입력하면 그 곳의 특징과 명소를 찾아 초등학생 그림일기용 그림을 그려 드려요. 완성된 그림일기는 자동으로 게시됩니다.</p>
+      <p class="travel-intro">여행지를 검색하면 특징·명소·전시 등 관련 소재를 분류별로 보여드려요. 그리고 싶은 소재를 고르고(여러 개 선택 가능), 날씨와 함께 간 사람을 정한 뒤 그리기를 누르면 그림일기가 완성됩니다.</p>
+
       <form id="travel-form" class="travel-form">
         <input
           id="travel-destination"
@@ -982,13 +1072,36 @@
           autocomplete="off"
           maxlength="60"
         />
-        <button type="submit" id="travel-submit">그림일기 만들기</button>
+        <button type="submit" id="travel-search-btn">검색</button>
       </form>
-      <label class="kakao-send-opt">
-        <input type="checkbox" id="travel-send-kakao" />
-        <span>완성되면 카카오톡으로 전송</span>
-      </label>
       <p id="travel-status" class="travel-status" aria-live="polite"></p>
+
+      <section id="travel-options" class="travel-options" hidden>
+        <div class="travel-opt-block">
+          <h3 class="travel-opt-title">1. 그림에 넣을 소재 선택 <span class="travel-opt-hint">(여러 개 선택 가능)</span></h3>
+          <div id="travel-features" class="travel-features"></div>
+        </div>
+
+        <div class="travel-opt-block">
+          <h3 class="travel-opt-title">2. 날씨 <span class="travel-opt-hint">(선택 안 하면 기본)</span></h3>
+          <div id="travel-weather" class="travel-chips" role="radiogroup" aria-label="날씨"></div>
+        </div>
+
+        <div class="travel-opt-block">
+          <h3 class="travel-opt-title">3. 함께 간 사람 <span class="travel-opt-hint">(여러 명 선택 가능, 선택 안 하면 혼자)</span></h3>
+          <div id="travel-family" class="travel-chips" aria-label="함께 간 사람"></div>
+        </div>
+
+        <label class="kakao-send-opt">
+          <input type="checkbox" id="travel-send-kakao" />
+          <span>완성되면 카카오톡으로 전송</span>
+        </label>
+
+        <div class="travel-draw-row">
+          <button type="button" id="travel-draw-btn" class="travel-draw-btn">그림일기 그리기</button>
+          <p id="travel-draw-status" class="travel-status" aria-live="polite"></p>
+        </div>
+      </section>
 
       <section id="travel-result" class="travel-card" hidden>
         <img id="travel-image" class="travel-card-image" alt="여행 그림일기 그림" />

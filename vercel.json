@@ -9,7 +9,9 @@
     "api/gemini.js": { "maxDuration": 60 },
     "api/research.js": { "maxDuration": 90 },
     "api/travel.js": { "maxDuration": 120 },
+    "api/travel-search.js": { "maxDuration": 60 },
     "api/reports.js": { "maxDuration": 15 },
+    "api/report-view.js": { "maxDuration": 15, "includeFiles": "report.html" },
     "api/analyze-file.js": { "maxDuration": 180 },
     "api/kakao/auth.js": { "maxDuration": 15 },
     "api/kakao/callback.js": { "maxDuration": 15 },
@@ -18,6 +20,6 @@
   },
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
-    { "source": "/report", "destination": "/report.html" }
+    { "source": "/report", "destination": "/api/report-view" }
   ]
 }
