@@ -20,7 +20,7 @@ const ANALYSIS_MODES = {
   },
 };
 
-const MAX_FILE_BYTES = 4 * 1024 * 1024;
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
 const ACCEPT_TYPES =
   '.pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.mp3,.wav,.aac,.ogg,.flac,.m4a,.webm,application/pdf,image/*,audio/*';
 
