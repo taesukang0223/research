@@ -30,4 +30,3 @@ dist/
 .vercel/
 
 !.env.example
-!.env.sample
