@@ -11,6 +11,9 @@ const travelStatus = document.getElementById('travel-status');
 
 const travelOptions = document.getElementById('travel-options');
 const travelFeaturesEl = document.getElementById('travel-features');
+const travelCustomText = document.getElementById('travel-custom-text');
+const travelCustomAdd = document.getElementById('travel-custom-add');
+const travelCustomList = document.getElementById('travel-custom-list');
 const travelWeatherEl = document.getElementById('travel-weather');
 const travelFamilyEl = document.getElementById('travel-family');
 const travelDrawBtn = document.getElementById('travel-draw-btn');
@@ -44,7 +47,9 @@ const FALLBACK_FAMILY = [
   { key: 'friend', label: '친구' },
 ];
 
+const MAX_CUSTOM_TOPICS = 5;
 let currentDestination = '';
+let customTopics = [];
 
 function escapeHtml(text) {
   return String(text ?? '')
@@ -131,6 +136,52 @@ function getSelectedFeatures() {
   return Array.from(travelFeaturesEl.querySelectorAll('input:checked')).map((i) => i.value);
 }
 
+/* ── 직접 추가 주제 ── */
+
+function renderCustomTopics() {
+  travelCustomList.innerHTML = customTopics
+    .map(
+      (topic, idx) => `
+    <span class="travel-custom-chip">
+      <span>${escapeHtml(topic)}</span>
+      <button type="button" data-idx="${idx}" aria-label="삭제">×</button>
+    </span>`
+    )
+    .join('');
+
+  travelCustomList.querySelectorAll('button[data-idx]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      customTopics.splice(Number(btn.dataset.idx), 1);
+      renderCustomTopics();
+      updateCustomAddState();
+    });
+  });
+}
+
+function updateCustomAddState() {
+  const atLimit = customTopics.length >= MAX_CUSTOM_TOPICS;
+  travelCustomAdd.disabled = atLimit;
+  travelCustomText.disabled = atLimit;
+  travelCustomText.placeholder = atLimit
+    ? `최대 ${MAX_CUSTOM_TOPICS}개까지 추가했어요`
+    : '그림에 넣고 싶은 주제를 입력 후 추가';
+}
+
+function addCustomTopic() {
+  const value = travelCustomText.value.trim();
+  if (!value) return;
+  if (customTopics.length >= MAX_CUSTOM_TOPICS) return;
+  if (customTopics.some((t) => t.toLowerCase() === value.toLowerCase())) {
+    travelCustomText.value = '';
+    return;
+  }
+  customTopics.push(value.slice(0, 40));
+  travelCustomText.value = '';
+  renderCustomTopics();
+  updateCustomAddState();
+  travelCustomText.focus();
+}
+
 function getSelectedWeather() {
   const checked = travelWeatherEl.querySelector('input:checked');
   return checked ? checked.value : '';
@@ -163,6 +214,9 @@ async function runSearch(destination) {
     }
 
     currentDestination = destination;
+    customTopics = [];
+    renderCustomTopics();
+    updateCustomAddState();
     renderFeatures(data.categories);
     travelOptions.hidden = false;
     setStatus(travelStatus, `"${destination}" 소재를 찾았어요. 그리고 싶은 것을 골라 주세요.`, 'success');
@@ -213,6 +267,7 @@ async function runDraw() {
   const payload = {
     destination: currentDestination,
     selectedFeatures: getSelectedFeatures(),
+    customTopics: [...customTopics],
     weather: getSelectedWeather(),
     family: getSelectedFamily(),
     sendKakao: Boolean(travelSendKakao && travelSendKakao.checked),
@@ -295,6 +350,19 @@ if (travelForm) {
 
 if (travelDrawBtn) {
   travelDrawBtn.addEventListener('click', runDraw);
+}
+
+if (travelCustomAdd) {
+  travelCustomAdd.addEventListener('click', addCustomTopic);
+}
+
+if (travelCustomText) {
+  travelCustomText.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addCustomTopic();
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', initOptions);

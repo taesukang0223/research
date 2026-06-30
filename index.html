@@ -851,6 +851,63 @@
 
     .travel-draw-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
+    .travel-custom-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .travel-custom-input input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .travel-custom-btn {
+      padding: 0.55rem 1.1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .travel-custom-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .travel-custom-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.5rem 0.45rem 0.85rem;
+      font-size: 0.8125rem;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .travel-custom-chip button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.1rem;
+      height: 1.1rem;
+      padding: 0;
+      font-size: 0.9rem;
+      line-height: 1;
+      color: var(--accent);
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
     .travel-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -1083,12 +1140,27 @@
         </div>
 
         <div class="travel-opt-block">
-          <h3 class="travel-opt-title">2. 날씨 <span class="travel-opt-hint">(선택 안 하면 기본)</span></h3>
+          <h3 class="travel-opt-title">2. 직접 추가할 주제 <span class="travel-opt-hint">(최대 5개, 예: 양자역학)</span></h3>
+          <div class="travel-custom-input">
+            <input
+              id="travel-custom-text"
+              type="text"
+              placeholder="그림에 넣고 싶은 주제를 입력 후 추가"
+              autocomplete="off"
+              maxlength="40"
+            />
+            <button type="button" id="travel-custom-add" class="travel-custom-btn">추가</button>
+          </div>
+          <div id="travel-custom-list" class="travel-chips"></div>
+        </div>
+
+        <div class="travel-opt-block">
+          <h3 class="travel-opt-title">3. 날씨 <span class="travel-opt-hint">(선택 안 하면 기본)</span></h3>
           <div id="travel-weather" class="travel-chips" role="radiogroup" aria-label="날씨"></div>
         </div>
 
         <div class="travel-opt-block">
-          <h3 class="travel-opt-title">3. 함께 간 사람 <span class="travel-opt-hint">(여러 명 선택 가능, 선택 안 하면 혼자)</span></h3>
+          <h3 class="travel-opt-title">4. 함께 간 사람 <span class="travel-opt-hint">(여러 명 선택 가능, 선택 안 하면 혼자)</span></h3>
           <div id="travel-family" class="travel-chips" aria-label="함께 간 사람"></div>
         </div>
 
