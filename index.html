@@ -57,6 +57,150 @@
       color: var(--text-secondary);
     }
 
+    .research-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .research-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.9375rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text-primary);
+    }
+
+    .research-form input:focus {
+      outline: 2px solid var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .research-form button {
+      flex-shrink: 0;
+      padding: 0.625rem 1.125rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .research-form button:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
+
+    .research-form button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .research-status {
+      margin-top: 0.625rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      min-height: 1.25rem;
+    }
+
+    .research-status.error {
+      color: #b54747;
+    }
+
+    .research-status.success {
+      color: #3d6b4f;
+    }
+
+    .research-results {
+      margin-bottom: 2rem;
+    }
+
+    .result-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    @media (max-width: 720px) {
+      .result-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .research-form {
+        flex-direction: column;
+      }
+    }
+
+    .result-panel {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .result-panel-header {
+      padding: 0.75rem 1rem;
+      background: var(--accent-light);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .result-panel-body {
+      padding: 0.75rem 1rem;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .result-item + .result-item {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .result-item h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .result-url {
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+      word-break: break-all;
+    }
+
+    .result-url a {
+      color: var(--accent);
+    }
+
+    .result-snippet {
+      margin-top: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .result-meta {
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .result-empty,
+    .result-error {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .result-error {
+      color: #b54747;
+    }
+
     section {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -115,7 +259,35 @@
     <header>
       <h1>방산 리서치 아카이브</h1>
       <p>방위산업 관련 리서치 보고서를 모아둔 아카이브입니다.</p>
+      <form id="research-form" class="research-form">
+        <input
+          id="topic-keyword"
+          type="text"
+          name="query"
+          placeholder="관심 주제 키워드 (예: KF-21, 방산 수출)"
+          autocomplete="off"
+          maxlength="100"
+        />
+        <button type="submit" id="research-submit">리서치 실행</button>
+      </form>
+      <p id="research-status" class="research-status" aria-live="polite"></p>
     </header>
+
+    <section id="research-results" class="research-results" hidden aria-labelledby="research-results-heading">
+      <div class="section-header">
+        <h2 id="research-results-heading">검색 결과</h2>
+      </div>
+      <div class="result-columns">
+        <div class="result-panel">
+          <div class="result-panel-header">글로벌 (Tavily)</div>
+          <div id="tavily-results" class="result-panel-body"></div>
+        </div>
+        <div class="result-panel">
+          <div class="result-panel-header">국내 (Naver)</div>
+          <div id="naver-results" class="result-panel-body"></div>
+        </div>
+      </div>
+    </section>
 
     <section aria-labelledby="report-list-heading">
       <div class="section-header">
@@ -135,5 +307,6 @@
       &copy; 2026 방산 리서치 아카이브
     </footer>
   </div>
+  <script src="js/research.js"></script>
 </body>
 </html>

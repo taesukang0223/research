@@ -6,7 +6,8 @@
   "functions": {
     "api/tavily.js": { "maxDuration": 30 },
     "api/search.js": { "maxDuration": 15 },
-    "api/gemini.js": { "maxDuration": 60 }
+    "api/gemini.js": { "maxDuration": 60 },
+    "api/research.js": { "maxDuration": 45 }
   },
   "rewrites": [
     { "source": "/", "destination": "/index.html" }
