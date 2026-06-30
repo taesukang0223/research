@@ -21,6 +21,10 @@ const SYNC_KEYS = [
   'NAVER_CLIENT_ID',
   'NAVER_CLIENT_SECRET',
   'GEMINI_API_KEY',
+  'KAKAO_REST_API_KEY',
+  'KAKAO_CLIENT_SECRET',
+  'KAKAO_REDIRECT_URI',
+  'APP_BASE_URL',
 ];
 
 const SENSITIVE_KEYS = new Set([
@@ -31,6 +35,8 @@ const SENSITIVE_KEYS = new Set([
   'NAVER_CLIENT_ID',
   'NAVER_CLIENT_SECRET',
   'GEMINI_API_KEY',
+  'KAKAO_REST_API_KEY',
+  'KAKAO_CLIENT_SECRET',
 ]);
 
 const TARGET_ENVS = ['production', 'preview', 'development'];

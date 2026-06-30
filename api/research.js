@@ -10,6 +10,15 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const result = await handleResearch(req.body);
+  const setCookie = [];
+  const result = await handleResearch(req.body, {
+    cookieHeader: req.headers.cookie,
+    setCookie,
+  });
+
+  if (result.setCookie?.length) {
+    res.setHeader('Set-Cookie', result.setCookie);
+  }
+
   return res.status(result.status).json(result.body);
 };

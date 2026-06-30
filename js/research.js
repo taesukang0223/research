@@ -108,6 +108,7 @@ async function runResearch(keyword) {
     const response = await fetch('/api/research', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
       body: JSON.stringify({ query: keyword }),
     });
 
@@ -139,7 +140,16 @@ async function runResearch(keyword) {
       await window.loadReportList(data.report.saved.id);
     }
 
-    setStatus(`"${keyword}" 리서치 완료`, 'success');
+    if (data.report?.kakao?.sent) {
+      setStatus(`"${keyword}" 리서치 완료 · 카카오톡으로 보고서를 보냈습니다.`, 'success');
+    } else if (data.report?.kakao?.reason === 'not_connected') {
+      setStatus(`"${keyword}" 리서치 완료 · 카카오톡 전송: 로그인 필요`, 'success');
+      if (window.refreshKakaoStatus) await window.refreshKakaoStatus();
+    } else if (data.report?.kakao?.error) {
+      setStatus(`"${keyword}" 리서치 완료 · 카카오톡 전송 실패`, 'success');
+    } else {
+      setStatus(`"${keyword}" 리서치 완료`, 'success');
+    }
   } catch {
     setStatus('서버 연결에 실패했습니다.', 'error');
   } finally {

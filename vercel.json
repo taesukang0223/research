@@ -9,7 +9,11 @@
     "api/gemini.js": { "maxDuration": 60 },
     "api/research.js": { "maxDuration": 90 },
     "api/reports.js": { "maxDuration": 15 },
-    "api/analyze-file.js": { "maxDuration": 120 }
+    "api/analyze-file.js": { "maxDuration": 120 },
+    "api/kakao/auth.js": { "maxDuration": 15 },
+    "api/kakao/callback.js": { "maxDuration": 15 },
+    "api/kakao/status.js": { "maxDuration": 10 },
+    "api/kakao/logout.js": { "maxDuration": 10 }
   },
   "rewrites": [
     { "source": "/", "destination": "/index.html" },

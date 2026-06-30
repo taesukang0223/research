@@ -19,6 +19,10 @@ const geminiHandler = require('../api/gemini');
 const researchHandler = require('../api/research');
 const reportsHandler = require('../api/reports');
 const analyzeFileHandler = require('../api/analyze-file');
+const kakaoAuthHandler = require('../api/kakao/auth');
+const kakaoCallbackHandler = require('../api/kakao/callback');
+const kakaoStatusHandler = require('../api/kakao/status');
+const kakaoLogoutHandler = require('../api/kakao/logout');
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -31,6 +35,10 @@ app.all('/api/gemini', adaptHandler(geminiHandler));
 app.all('/api/research', adaptHandler(researchHandler));
 app.all('/api/reports', adaptHandler(reportsHandler));
 app.post('/api/analyze-file', adaptHandler(analyzeFileHandler));
+app.get('/api/kakao/auth', adaptHandler(kakaoAuthHandler));
+app.get('/api/kakao/callback', adaptHandler(kakaoCallbackHandler));
+app.get('/api/kakao/status', adaptHandler(kakaoStatusHandler));
+app.post('/api/kakao/logout', adaptHandler(kakaoLogoutHandler));
 
 app.use('/js', express.static(path.join(rootDir, 'js')));
 app.get('/', (_req, res) => res.sendFile(path.join(rootDir, 'index.html')));
@@ -46,4 +54,7 @@ app.listen(port, () => {
   console.log('  GET/POST /api/research');
   console.log('  GET      /api/reports');
   console.log('  GET/POST /api/analyze-file');
+  console.log('  GET      /api/kakao/auth');
+  console.log('  GET      /api/kakao/callback');
+  console.log('  GET      /api/kakao/status');
 });
