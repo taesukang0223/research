@@ -402,6 +402,19 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 0.75rem;
+      position: relative;
+    }
+
+    .file-analyze-input-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .file-analyze-pick-btn {
@@ -419,9 +432,11 @@
       background: #e4ebf2;
     }
 
-    .file-analyze-pick-btn:disabled {
+    .file-analyze-pick-btn:disabled,
+    .file-analyze-pick-btn.is-disabled {
       opacity: 0.6;
       cursor: not-allowed;
+      pointer-events: none;
     }
 
     .file-analyze-filename {
@@ -637,8 +652,14 @@
           <div class="file-analyze-row">
             <span class="file-analyze-label">파일 선택</span>
             <div class="file-analyze-pick-row">
-              <input id="file-analyze-input" type="file" hidden />
-              <button type="button" id="file-analyze-pick" class="file-analyze-pick-btn">파일 선택</button>
+              <input
+                id="file-analyze-input"
+                type="file"
+                class="file-analyze-input-hidden"
+                tabindex="-1"
+                accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.heic,.mp3,.wav,.aac,.ogg,.flac,.m4a,.webm,application/pdf,image/*,audio/*"
+              />
+              <label for="file-analyze-input" id="file-analyze-pick" class="file-analyze-pick-btn">파일 선택</label>
               <span id="file-analyze-filename" class="file-analyze-filename">선택된 파일 없음</span>
             </div>
             <p class="file-analyze-hint">PDF, 이미지(JPG/PNG/WebP/GIF), 음성(MP3/WAV/AAC/OGG 등) · 최대 4MB</p>

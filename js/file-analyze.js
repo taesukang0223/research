@@ -111,7 +111,16 @@ function updateFileLabel() {
   }
 }
 
-filePickBtn.addEventListener('click', () => fileInput.click());
+function setPickDisabled(disabled) {
+  fileInput.disabled = disabled;
+  filePickBtn.classList.toggle('is-disabled', disabled);
+  if (disabled) {
+    filePickBtn.setAttribute('aria-disabled', 'true');
+  } else {
+    filePickBtn.removeAttribute('aria-disabled');
+  }
+}
+
 fileInput.addEventListener('change', updateFileLabel);
 
 form.addEventListener('submit', async (event) => {
@@ -137,7 +146,7 @@ form.addEventListener('submit', async (event) => {
 
   hideResult();
   submitBtn.disabled = true;
-  filePickBtn.disabled = true;
+  setPickDisabled(true);
   setStatus('AI가 파일을 분석하고 있습니다...');
 
   const formData = new FormData();
@@ -166,7 +175,7 @@ form.addEventListener('submit', async (event) => {
     showResultError('서버 연결에 실패했습니다.');
   } finally {
     submitBtn.disabled = false;
-    filePickBtn.disabled = false;
+    setPickDisabled(false);
   }
 });
 
