@@ -7,9 +7,11 @@
     "api/tavily.js": { "maxDuration": 30 },
     "api/search.js": { "maxDuration": 15 },
     "api/gemini.js": { "maxDuration": 60 },
-    "api/research.js": { "maxDuration": 90 }
+    "api/research.js": { "maxDuration": 90 },
+    "api/reports.js": { "maxDuration": 15 }
   },
   "rewrites": [
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/report", "destination": "/report.html" }
   ]
 }

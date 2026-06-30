@@ -124,13 +124,19 @@ async function runResearch(keyword) {
     }
 
     if (!response.ok) {
-      setStatus(data.error || '리서치에 실패했습니다.', 'error');
+      setStatus(data.report?.saveError || data.error || '리서치에 실패했습니다.', 'error');
       if (data.report?.error) showReportError(data.report.error);
+      else if (data.report?.saveError) showReportError(data.report.saveError);
+      if (data.report?.title) showReport(data.report);
       return;
     }
 
     if (data.report) {
       showReport(data.report);
+    }
+
+    if (data.report?.saved?.id != null) {
+      await window.loadReportList(data.report.saved.id);
     }
 
     setStatus(`"${keyword}" 리서치 완료`, 'success');
