@@ -149,11 +149,11 @@ async function runSearch(destination) {
   travelResult.hidden = true;
 
   try {
-    const response = await fetch('/api/travel-search', {
+    const response = await fetch('/api/travel', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify({ destination }),
+      body: JSON.stringify({ mode: 'search', destination }),
     });
     const data = await response.json();
 

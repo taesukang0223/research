@@ -9,7 +9,6 @@
     "api/gemini.js": { "maxDuration": 60 },
     "api/research.js": { "maxDuration": 90 },
     "api/travel.js": { "maxDuration": 120 },
-    "api/travel-search.js": { "maxDuration": 60 },
     "api/reports.js": { "maxDuration": 15 },
     "api/report-view.js": { "maxDuration": 15, "includeFiles": "report.html" },
     "api/analyze-file.js": { "maxDuration": 180 },
