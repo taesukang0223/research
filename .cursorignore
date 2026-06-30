@@ -1,0 +1,19 @@
+﻿# Cursor AI가 읽거나 인덱싱하지 않도록 차단
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# 브라우저용 로컬 설정 (실제 API 키 포함)
+js/config.js
+
+# 비밀 파일 저장소
+secrets/
+**/secrets/**
+
+# 인증서·키 파일
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt

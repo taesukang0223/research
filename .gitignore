@@ -1,0 +1,33 @@
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+secrets/*
+!secrets/.gitkeep
+
+# 브라우저용 로컬 설정 (실제 API 키 포함)
+js/config.js
+
+# Keys & certs
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+.vscode/
+.idea/
+
+# Node (추후 도입 시)
+node_modules/
+dist/
+.cache/
+.vercel/
+
+!.env.example
+!.env.sample

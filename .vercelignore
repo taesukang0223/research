@@ -1,0 +1,16 @@
+# 로컬 전용 (Vercel 배포 제외)
+server/
+scripts/
+
+# Secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+secrets/
+
+# Dev
+.git/
+.cursor/
+.cursorignore
+*.log

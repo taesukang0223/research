@@ -1,0 +1,24 @@
+{
+  "name": "lig-research-archive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "방산 리서치 아카이브 + 검색·AI API 프록시",
+  "scripts": {
+    "dev": "node scripts/dev-vercel.js",
+    "dev:express": "node scripts/check-env.js && node --watch server/index.js",
+    "start": "node scripts/check-env.js && node server/index.js",
+    "check:env": "node scripts/check-env.js",
+    "vercel": "node node_modules/vercel/dist/vc.js",
+    "vercel:login": "node node_modules/vercel/dist/vc.js login --github --oob"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "vercel": "^41.6.0"
+  }
+}
